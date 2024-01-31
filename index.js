@@ -28,5 +28,11 @@ app.get('/api/persons', (request, response)=>{
     response.json(notes)
 })
 
+app.get('/info', (request, response)=>{
+    const amount=notes.length
+    const d=new Date()
+    response.send(`<p>Phonebook has ${amount} people</p><p>${d.toUTCString()}</p>`)
+})
+
 const port=3001
 app.listen(port)
