@@ -34,5 +34,16 @@ app.get('/info', (request, response)=>{
     response.send(`<p>Phonebook has ${amount} people</p><p>${d.toUTCString()}</p>`)
 })
 
+app.get('/api/persons/:id', (request, response)=>{
+    const id =request.params.id
+    const person=notes.find(note=>note.id===parseInt(id))
+    if(person){
+        response.json(person)
+    }
+    else{
+        response.status(404).end()
+    }
+})
+
 const port=3001
 app.listen(port)
