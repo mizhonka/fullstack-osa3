@@ -51,9 +51,21 @@ const generateId=()=>{return Math.floor(Math.random()*100)}
 
 app.post('/api/persons', (request, response) =>{
     const body=request.body
-    if(!body.name && !body.number){
+    if(!body.name){
         return response.status(400).json({
-            error: 'content missing'
+            error: 'name cannot be empty'
+        })
+    }
+
+    if(!body.number){
+        return response.status(400).json({
+            error: 'number cannot be empty'
+        })
+    }
+
+    if(notes.find((person)=>{return person.name===body.name})){
+        return response.status(400).json({
+            error: 'this person already exists'
         })
     }
 
