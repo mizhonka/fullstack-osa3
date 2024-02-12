@@ -1,7 +1,9 @@
+require('dotenv').config()
 const express = require('express')
 const cors=require('cors')
 const morgan = require('morgan')
 const app = express()
+const Person=require('./models/person')
 
 morgan.token('data', (req)=>{JSON.stringify(req.body)})
 
@@ -34,7 +36,9 @@ let notes=[
 ]
 
 app.get('/api/persons', (request, response)=>{
-    response.json(notes)
+    Person.find({}).then(persons=>{
+        response.json(persons)
+    })
 })
 
 app.get('/info', (request, response)=>{
@@ -91,5 +95,5 @@ app.delete('/api/persons/:id', (request, response)=>{
     response.status(204).end()
 })
 
-const port=process.env.port || 3001
+const port=process.env.port
 app.listen(port)
