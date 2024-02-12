@@ -74,19 +74,13 @@ app.post('/api/persons', (request, response) =>{
         })
     }
 
-    if(notes.find(person=>person.name===body.name)){
-        return response.status(400).json({
-            error: 'this person already exists'
-        })
-    }
-
-    const person={
-        id: generateId(),
+    const person=new Person({
         name: body.name,
         number: body.number
-    }
-    notes=notes.concat(person)
-    response.json(person)
+    })
+    person.save().then(savedPerson=>{
+        response.json(savedPerson)
+    })
 })
 
 app.delete('/api/persons/:id', (request, response)=>{
