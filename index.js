@@ -16,6 +16,9 @@ const errorHandler=(error, request, response, next)=>{
     if(error==='CastError'){
         return response.status(400).send({error: 'malformatted id'})
     }
+    if(error==='Empty'){
+        return response.status(400).send({error: 'name or number cannot be empty'})
+    }
 
     next(error)
 }
@@ -66,20 +69,10 @@ app.get('/api/persons/:id', (request, response)=>{
     }
 })
 
-const generateId=()=>{return Math.floor(Math.random()*100)}
-
-app.post('/api/persons', (request, response) =>{
+app.post('/api/persons', (request, response, next) =>{
     const body=request.body
-    if(!body.name){
-        return response.status(400).json({
-            error: 'name cannot be empty'
-        })
-    }
-
-    if(!body.number){
-        return response.status(400).json({
-            error: 'number cannot be empty'
-        })
+    if(!body.name || !body.number){
+        return next('Empty')
     }
 
     const person=new Person({
