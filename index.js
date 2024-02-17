@@ -69,6 +69,22 @@ app.get('/api/persons/:id', (request, response)=>{
     }
 })
 
+app.put('/api/persons/:id', (request, response, next) =>{
+    const body=request.body
+    if(!body.number){
+        return next('Empty')
+    }
+
+    const person=new Person({
+        name: body.name,
+        number: body.number
+    })
+
+    Person.findOneAndUpdate({name: person.name}, {number: person.number}, {new:true}).then(updatedPerson=>{
+        response.json(updatedPerson)
+    })
+})
+
 app.post('/api/persons', (request, response, next) =>{
     const body=request.body
     if(!body.name || !body.number){
