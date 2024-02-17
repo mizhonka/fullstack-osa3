@@ -53,20 +53,18 @@ app.get('/api/persons', (request, response)=>{
 })
 
 app.get('/info', (request, response)=>{
-    const amount=notes.length
     const d=new Date()
-    response.send(`<p>Phonebook has ${amount} people</p><p>${d.toUTCString()}</p>`)
+    Person.countDocuments().then(amount=>{
+        response.send(`<p>Phonebook has ${amount} people</p><p>${d.toUTCString()}</p>`)
+    })
 })
 
 app.get('/api/persons/:id', (request, response)=>{
-    const id =request.params.id
-    const person=notes.find(note=>note.id===parseInt(id))
-    if(person){
-        response.json(person)
-    }
-    else{
-        response.status(404).end()
-    }
+    const id=request.params.id
+    Person.findById(id).then(result=>{
+        response.json(result)
+    })
+    .catch(error=>next(error))
 })
 
 app.put('/api/persons/:id', (request, response, next) =>{
