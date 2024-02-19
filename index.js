@@ -19,6 +19,9 @@ const errorHandler=(error, request, response, next)=>{
     if(error==='Empty'){
         return response.status(400).send({error: 'name or number cannot be empty'})
     }
+    if(error==='ValidationError'){
+        return response.status(400).json({error: error.message})
+    }
 
     next(error)
 }
@@ -85,7 +88,7 @@ app.put('/api/persons/:id', (request, response, next) =>{
 
 app.post('/api/persons', (request, response, next) =>{
     const body=request.body
-    if(!body.name || !body.number){
+    if(!body.number){
         return next('Empty')
     }
 
@@ -96,6 +99,7 @@ app.post('/api/persons', (request, response, next) =>{
     person.save().then(savedPerson=>{
         response.json(savedPerson)
     })
+    .catch(error=>next(error))
 })
 
 app.delete('/api/persons/:id', (request, response, next)=>{
