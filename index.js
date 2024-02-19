@@ -49,9 +49,6 @@ app.get('/api/persons/:id', (request, response, next) => {
 
 app.put('/api/persons/:id', (request, response, next) => {
 	const body=request.body
-	if(!body.number){
-		return next('Empty')
-	}
 
 	const person=new Person({
 		name: body.name,
@@ -60,7 +57,7 @@ app.put('/api/persons/:id', (request, response, next) => {
 
 	Person.findOneAndUpdate({ name: person.name }, { number: person.number }, { new:true }).then(updatedPerson => {
 		response.json(updatedPerson)
-	})
+	}).catch(error => next(error))
 })
 
 app.post('/api/persons', (request, response, next) => {
@@ -80,9 +77,9 @@ app.post('/api/persons', (request, response, next) => {
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
-	Person.findByIdAndDelete(request.params.id).then(
-		response.status(204).end()
-	)
+	Person.findByIdAndDelete(request.params.id).then(removedPerson => {
+		response.json(removedPerson)
+	})
 		.catch(error => next(error))
 })
 
