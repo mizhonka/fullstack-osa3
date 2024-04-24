@@ -39,6 +39,10 @@ app.get('/info', (request, response) => {
 	})
 })
 
+app.get('/health', (_req, res) => {
+	res.send('ok')
+})
+
 app.get('/api/persons/:id', (request, response, next) => {
 	const id=request.params.id
 	Person.findById(id).then(result => {
